@@ -1,74 +1,221 @@
-import {Image, StyleSheet, Platform} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, Button} from 'react-native';
+import categories from '../../constants/CategoriesData.json'
+import CategoryItem from "../../components/categoryItem/CategoryItem";
+import {icons} from '../../constants/CategoryIcons'
+import {useEffect, useState} from "react";
+import CategoryPrompt from "../../components/modal/modal";
+import {useAppDispatch, useAppSelector} from "@/hooks/redux";
+import {fetchBalance} from "@/store/reducers/ActionCreators";
 
-import {HelloWave} from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import {ThemedText} from '@/components/ThemedText';
-import {ThemedView} from '@/components/ThemedView';
 
 export default function HomeScreen() {
+    const dispatch = useAppDispatch();
+    console.log('6')
+    const {balanceData} = useAppSelector(state => {
+        console.log('7 state', state)
+      return state.balanceReducer
+    });
+
+    const {balance} = balanceData
+    const API_URL = "https://script.google.com/macros/s/AKfycby7M1bpXHiiYuvt-9649OEFOCz8nsRqsX2f_syABJgf_Yp6DKJujiY2rB6fDcxFLCzHfA/exec";
+
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    const [visible, setVisible] = useState(false);
+    const [currentCategory, setCurrentCategory] = useState('');
+    //const [transactions, setTransactions] = useState([]);
+    //const [balance, setBalance] = useState({startBalance: 0, currentBalance: 0, lastUpdate: ""});
+    //const {startBalance, currentBalance} = balance
+    //console.log('transactions', transactions)
+    //console.log('balance', balance)
+
+    useEffect(() => {
+        //fetchData().then(r => r);
+        console.log('1')
+        dispatch(fetchBalance())
+    }, []);
+
+    // const fetchData = async () => {
+    //     try {
+    //         const response = await fetch(API_URL);
+    //         const data = await response.json();
+    //         console.log('from component', data);
+    //         if (data.success) {
+    //             // setTransactions(data.transactions);
+    //             // setBalance(data.balance);
+    //         } else {
+    //             console.error("Ошибка при получении данных:", data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error("Ошибка:", error);
+    //     }
+    // };
+
+    const handleCategory = async (input: number) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: JSON.stringify({
+                    category: currentCategory,
+                    amount: input,
+                    date: new Date().toLocaleDateString("ru-RU", {})
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                //await fetchData(); // Обновляем данные после добавления транзакции
+                await dispatch(fetchBalance());
+            } else {
+                console.error("Ошибка при добавлении данных:", data.message);
+            }
+        } catch (error) {
+            console.error("Ошибка:", error);
+        }
+    };
+
+    const categoryHandler = (name: string) => {
+        setVisible(true)
+        setCurrentCategory(name)
+    }
+
     return (
-        <ParallaxScrollView
-            headerBackgroundColor={{light: '#A1CEDC', dark: '#1D3D47'}}
-            headerImage={
-                <Image
-                    source={require('@/assets/images/partial-react-logo.png')}
-                    style={styles.reactLogo}
-                />
-            }>
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Welcome cum!</ThemedText>
-                <HelloWave/>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-                <ThemedText>
-                    Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-                    Press{' '}
-                    <ThemedText type="defaultSemiBold">
-                        {Platform.select({
-                            ios: 'cmd + d',
-                            android: 'cmd + m',
-                            web: 'F12'
-                        })}
-                    </ThemedText>{' '}
-                    to open developer tools.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-                <ThemedText>
-                    Tap the Explore tab to learn more about what's included in this starter app.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-                <ThemedText>
-                    When you're ready, run{' '}
-                    <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-                    <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-                    <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-                    <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-                </ThemedText>
-            </ThemedView>
-        </ParallaxScrollView>
+        <SafeAreaView style={styles.home}>
+            <View style={styles.header}>
+                <Text style={styles.date}>{formattedDate}</Text>
+            </View>
+            <View style={styles.main}>
+                <View style={styles.balance}>
+                    <View style={styles.chart}>
+                        <Text>
+                            {`Было: ${balance.startBalance}`}
+                        </Text>
+                        <Text>
+                            {`Стало: ${balance.currentBalance}`}
+                        </Text>
+                    </View>
+                    <View style={styles.button_block}>
+                        <Button title={'Update initial capitel'}></Button>
+                    </View>
+                </View>
+                <View style={styles.categories}>
+                    {categories.categories.map(category => {
+                        return <CategoryItem
+                            style={styles.category}
+                            name={category.name}
+                            key={category.id}
+                            icon={icons[category.name]}
+                            handler={categoryHandler}
+                        >1</CategoryItem>
+                    })}
+                </View>
+            </View>
+            <CategoryPrompt
+                visible={visible}
+                onClose={() => setVisible(false)}
+                onSubmit={handleCategory}
+            />
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        flexDirection: 'row',
+    home: {
+        flex: 1,
+    },
+    header: {
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
+        height: '15%',
+        backgroundColor: '#3651ba',
+        display: 'flex',
         alignItems: 'center',
-        gap: 8,
+        justifyContent: 'flex-end',
+        padding: 20,
+        position: 'relative'
     },
-    stepContainer: {
-        gap: 8,
-        marginBottom: 8,
+    date: {
+        color: 'white',
     },
-    reactLogo: {
-        height: 178,
-        width: 290,
-        bottom: 0,
-        left: 0,
+    main: {
+        height: '85%',
+        backgroundColor: 'white',
+    },
+    balance: {
+        height: '42%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
+    },
+    categories: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)', /* 3 колонки */
+        gridTemplateRows: 'repeat(4, 1fr)', /* 4 ряда */
+        //gap: 1,
+        backgroundColor: '#ddd',
+        width: '100%',
+        //justifyContent: 'center',
+        //alignItems: 'center',
+        padding: 10,
+        boxSizing: 'border-box',
+        height: 'calc(65% - 40px)',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
+    },
+    category: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#3498db',
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
+        width: '70px',
+        height: '70px',
+        borderRadius: 30,
+    },
+    chart: {
+        width: '150px',
+        height: '150px',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: '50%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        width: '150px',
+        height: '150px',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'black',
         position: 'absolute',
+        top: '50%',
+        left: '30%',
+        backgroundColor: 'white'
     },
+    button_block: {
+        width: 'auto',
+        height: 'auto'
+    },
+
 });

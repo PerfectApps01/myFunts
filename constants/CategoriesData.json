@@ -1,0 +1,52 @@
+{
+  "categories": [
+    {
+      "id": "restaurant",
+      "name": "restaurant"
+    },
+    {
+      "id": "leisure",
+      "name": "leisure"
+    },
+    {
+      "id": "transport",
+      "name": "transport"
+    },
+    {
+      "id": "products",
+      "name": "products"
+    },
+    {
+      "id": "pets",
+      "name": "pets"
+    },
+    {
+      "id": "health",
+      "name": "health"
+    },
+    {
+      "id": "shopping",
+      "name": "shopping"
+    },
+    {
+      "id": "family",
+      "name": "family"
+    },
+    {
+      "id": "bank",
+      "name": "bank"
+    },
+    {
+      "id": "presents",
+      "name": "presents"
+    },
+    {
+      "id": "car",
+      "name": "car"
+    },
+    {
+      "id": "others",
+      "name": "others"
+    }
+  ]
+}
