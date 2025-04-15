@@ -11,15 +11,14 @@ interface CategoryItemProps {
     name: string;
     id: string;
     icon: any;
-    //make string types for name
-    handler: (name: string) => void;
+    handler: (name: string, modalType: string) => void;
+    total: string
 }
 
-const CategoryItem: FC<CategoryItemProps> = ({name, id, icon, handler}) => {
+const CategoryItem: FC<CategoryItemProps> = ({name, icon, handler, total}) => {
     const buttonHandler = () => {
-        handler(name)
+        handler(name, 'setCategory')
     }
-
     return (
         <TouchableOpacity style={styles.main} onPress={buttonHandler}>
             <View style={styles.category}>
@@ -27,7 +26,7 @@ const CategoryItem: FC<CategoryItemProps> = ({name, id, icon, handler}) => {
                 <Image style={styles.icon} source={icon}/>
             </View>
             <View>
-                <Text>45234</Text>
+                <Text>{total.length !== 0 ? total : '0'}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -66,4 +65,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default CategoryItem;
+export default React.memo(CategoryItem);

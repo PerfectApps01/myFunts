@@ -10,6 +10,14 @@ interface CategoryPromptProps {
 const CategoryPrompt = ({visible, onClose, onSubmit}: CategoryPromptProps) => {
     const [input, setInput] = useState("");
 
+    const handleSubmit = () => {
+        if (input.length !== 0) {
+            onSubmit(input);
+            setInput('')
+            onClose();
+        }
+    }
+
     return (
         <Modal visible={visible} transparent animationType="slide">
             <View style={{flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)"}}>
@@ -20,10 +28,10 @@ const CategoryPrompt = ({visible, onClose, onSubmit}: CategoryPromptProps) => {
                         value={input}
                         onChangeText={setInput}
                     />
-                    <Button title="OK" onPress={() => {
-                        onSubmit(input);
-                        onClose();
+                    <Button title="OK" onPress={(event) => {
+                        handleSubmit()
                     }}/>
+                    <Button title="Close" onPress={onClose}/>
                 </View>
             </View>
         </Modal>

@@ -1,35 +1,49 @@
-import {StyleSheet, Image, Platform, View, Text} from 'react-native';
-import {useAppSelector} from '../../hooks/redux'
+import {StyleSheet, Image, Platform, View, Text, Button} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../../hooks/redux'
+import {useEffect} from "react";
+import {deleteTransaction, fetchBalance} from "@/store/reducers/ActionCreators";
 
 export default function TabTwoScreen() {
-    const {transactions} = useAppSelector(state => state.balanceReducer.balanceData)
+    const dispatch = useAppDispatch();
+    const {isLoading, balanceData} = useAppSelector(state => state.balanceReducer)
+    const {transactions} = balanceData
+
+    useEffect(() => {
+        dispatch(fetchBalance());
+    }, [dispatch]);
+
+    const handleDelete = (transactionDate: string, transactionCategory: string, transactionAmount: string) => {
+        dispatch(deleteTransaction({ date: transactionDate, category: transactionCategory, amount: transactionAmount}));
+        dispatch(fetchBalance());
+    };
+
     return (
         <View>
-            {transactions.map((transaction, index) => (
-                <View key={index}>
+            {isLoading || !transactions ? (
+                <Text>Загрузка...</Text>
+            ) : (transactions.map((transaction, index) => (
+                <View style={styles.item} key={index}>
                     <View>
                         <Text>
-                            {transaction.Category}
+                            {transaction.category}
                         </Text>
                     </View>
-                    <Text>
-                        <View>{transaction.Sum}</View>
-                    </Text>
+                    <View>
+                        <Text>{transaction.amount}</Text>
+                    </View>
+                    <View>
+                        <Button onPress={() => handleDelete(transaction.date, transaction.category, transaction.amount)} title={'Delete'}/>
+                    </View>
                 </View>
-            ))}
+            )))}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    headerImage: {
-        color: '#808080',
-        bottom: -90,
-        left: -35,
-        position: 'absolute',
-    },
-    titleContainer: {
+    item: {
+        display: 'flex',
         flexDirection: 'row',
-        gap: 8,
+        margin: 3
     },
 });

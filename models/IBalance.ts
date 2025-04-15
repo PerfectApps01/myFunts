@@ -16,3 +16,19 @@ export interface transactionType {
     Rest: number;
     Sum: number;
 }
+
+export interface categoryType {
+    category:
+        'car'
+        | 'family'
+        | 'bank'
+        | 'restaurant'
+        | 'leisure'
+        | 'transport'
+        | 'products'
+        | 'pets'
+        | 'health'
+        | 'shopping'
+        | 'presents'
+        | 'others'
+}

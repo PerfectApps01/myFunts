@@ -1,23 +1,112 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL} from "@/constants/baseURL";
-
+import axios from "axios";
 
 export const fetchBalance = createAsyncThunk(
     "balance/fetchBalance",
-    async (_, thunkAPI) => {
+    async (_, { rejectWithValue }) => {
         try {
-            console.log('2')
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            console.log('3')
-            if (data.success) {
-                console.log('4')
-                return data;
-            } else {
-                console.error("Ошибка при получении данных:", data.message);
+            const response = await axios.get(API_URL, {
+                headers: {
+                    Accept: "application/json",
+                },
+            });
+
+            const data = response.data;
+            if (!data.success) {
+                throw new Error("Ошибка при получении данных");
             }
-        } catch (error) {
-            console.error("Ошибка:", error);
+
+            return data;
+        } catch (error: any) {
+            return rejectWithValue(error.message);
         }
     }
-)
+);
+
+export const updateBalance = createAsyncThunk(
+    "balance/updateBalance",
+    async ({category, amount}: { category: string; amount: number }, {rejectWithValue, dispatch}) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: JSON.stringify({
+                    actionType: 'addSpend',
+                    category,
+                    amount,
+                    date: new Date(),
+                }),
+            });
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error("Ошибка при обновлении данных");
+            }
+            // dispatch(fetchBalance());
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+// Обновление стартового баланса (увеличение, уменьшение, новая сумма)
+export const updateStartBalance = createAsyncThunk(
+    "balance/updateStartBalance",
+    async ({amount, action}: { amount: number; action: "add" | "subtract" | "set" }, {rejectWithValue, dispatch}) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: JSON.stringify({
+                    actionType: 'updateBalance',
+                    action,
+                    amount,
+                }),
+            });
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error("Ошибка при обновлении стартового баланса");
+            }
+            dispatch(fetchBalance()); // Обновляем баланс после корректировки
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const deleteTransaction = createAsyncThunk(
+    "balance/deleteTransaction",
+    async ({ date, category, amount }: { date: string, category: string, amount: string }, { rejectWithValue, dispatch }) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: JSON.stringify({
+                    actionType: "deleteTransaction",
+                    date,
+                    category,
+                    amount
+                }),
+            });
+
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error("Ошибка при удалении транзакции");
+            }
+
+            dispatch(fetchBalance()); // Обновим данные
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
