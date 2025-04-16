@@ -11,7 +11,7 @@ const CategoryPrompt = ({visible, onClose, onSubmit}: CategoryPromptProps) => {
     const [input, setInput] = useState("");
 
     const handleSubmit = () => {
-        if (input.length !== 0) {
+        if (input.length !== 0 || input !== '0') {
             onSubmit(input);
             setInput('')
             onClose();

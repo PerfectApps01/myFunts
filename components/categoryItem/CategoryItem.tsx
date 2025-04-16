@@ -10,12 +10,12 @@ import React, {FC} from "react";
 interface CategoryItemProps {
     name: string;
     id: string;
-    icon: any;
+    icon: React.FC<{ width?: number; height?: number }>;
     handler: (name: string, modalType: string) => void;
     total: string
 }
 
-const CategoryItem: FC<CategoryItemProps> = ({name, icon, handler, total}) => {
+const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total}) => {
     const buttonHandler = () => {
         handler(name, 'setCategory')
     }
@@ -23,10 +23,12 @@ const CategoryItem: FC<CategoryItemProps> = ({name, icon, handler, total}) => {
         <TouchableOpacity style={styles.main} onPress={buttonHandler}>
             <View style={styles.category}>
                 {name && <Text style={styles.category_text}>{name}</Text>}
-                <Image style={styles.icon} source={icon}/>
+                <View style={{}}>
+                <IconComponent width={40} height={40} />
+                </View>
             </View>
             <View>
-                <Text>{total.length !== 0 ? total : '0'}</Text>
+                <Text>{total.length !== 0 ? total : '0'} €</Text>
             </View>
         </TouchableOpacity>
     )
@@ -65,4 +67,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default React.memo(CategoryItem);
+export default CategoryItem;
