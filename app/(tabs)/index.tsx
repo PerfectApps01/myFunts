@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, Button} from 'react-native';
 import {useCallback, useEffect, useState} from 'react';
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {deleteTransaction, fetchBalance, updateBalance, updateStartBalance} from "../../store/reducers/ActionCreators";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {fetchBalance, updateBalance, updateStartBalance} from "../../store/reducers/ActionCreators";
 import categories from '../../constants/CategoriesData.json';
 import CategoryItem from "../../components/categoryItem/CategoryItem";
-import { icons } from '../../constants/CategoryIcons';
+import {icons} from '../../constants/CategoryIcons';
 import CategoryPrompt from "../../components/modal/modal";
 import UpdateBalanceModal from "@/components/modal/UpdateBalanceModal";
 
 export default function HomeScreen() {
     const dispatch = useAppDispatch();
-    const { balanceData, isLoading } = useAppSelector(state => state.balanceReducer);
+    const {balanceData, isLoading} = useAppSelector(state => state.balanceReducer);
     const {balance, totals} = balanceData
 
     const [visible, setVisible] = useState(false);
@@ -22,7 +22,7 @@ export default function HomeScreen() {
     }, [dispatch]);
 
     const handleCategory = async (input: number) => {
-        dispatch(updateBalance({ category: currentCategory, amount: input }));
+        dispatch(updateBalance({category: currentCategory, amount: input}));
     };
 
     const categoryHandler = useCallback((name: string) => {
@@ -31,7 +31,7 @@ export default function HomeScreen() {
     }, []);
 
     const handleUpdateBalance = (amount: number, action: "add" | "subtract" | "set") => {
-        dispatch(updateStartBalance({ amount, action }));
+        dispatch(updateStartBalance({amount, action}));
     };
 
     return (
@@ -46,13 +46,15 @@ export default function HomeScreen() {
                             <Text>Загрузка...</Text>
                         ) : (
                             <>
-                                <Text>{`Было: ${balance.startBalance}`}</Text>
-                                <Text>{`Осталось: ${balance.currentBalance}`}</Text>
+                                <Text>{`Было: ${balance.startBalance}`} €</Text>
+                                <Text>{`Осталось: ${balance.currentBalance}`} €</Text>
                             </>
                         )}
                     </View>
                     <View style={styles.button_block}>
-                        <Button title={'Update initial capital'} onPress={() => {setModalVisible(true)}} />
+                        <Button title={'Update initial capital'} onPress={() => {
+                            setModalVisible(true)
+                        }}/>
                     </View>
                 </View>
                 <View style={styles.categories}>
@@ -61,8 +63,10 @@ export default function HomeScreen() {
                             key={category.id}
                             name={category.name}
                             icon={icons[category.name]}
+                            categoryColor={category.bgIconColor}
                             handler={categoryHandler}
                             total={totals[index] ? totals[index].total : '0'}
+                            isHome={true}
                         />
                     ))}
                 </View>
@@ -83,12 +87,44 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-    home: { flex: 1 },
-    header: { height: '15%', backgroundColor: '#3651ba', justifyContent: 'center', alignItems: 'center', padding: 20 },
-    date: { color: 'white' },
-    main: { height: '85%', backgroundColor: 'white' },
-    balance: { height: '42%', justifyContent: 'center', alignItems: 'center' },
-    categories: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', padding: 10 },
-    chart: { width: 150, height: 150, borderRadius: 75, justifyContent: 'center', alignItems: 'center', borderWidth: 1 },
-    button_block: { marginTop: 10 }
+    home: {
+        flex: 1
+    },
+    header: {
+        height: '10%',
+        backgroundColor: '#3651ba',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20
+    },
+    date: {
+        color: 'white'
+    },
+    main: {
+        height: '85%',
+        backgroundColor: 'white'
+        //#2C2C2E
+    },
+    balance: {
+        height: '25%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    categories: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        padding: 10
+    },
+    chart: {
+        width: 130,
+        height: 130,
+        borderRadius: 75,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1
+    },
+    button_block: {
+        marginTop: 5
+    }
 });

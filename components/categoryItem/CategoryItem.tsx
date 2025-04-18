@@ -1,35 +1,41 @@
 import {
-    Image,
     StyleSheet,
     Text,
     View,
     TouchableOpacity
 } from 'react-native';
 import React, {FC} from "react";
+import BudgetIcon from "@/components/Common/BudgetIcon";
 
 interface CategoryItemProps {
     name: string;
     id: string;
     icon: React.FC<{ width?: number; height?: number }>;
     handler: (name: string, modalType: string) => void;
-    total: string
+    total: string,
+    categoryColor: string,
+    isHome: boolean,
 }
 
-const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total}) => {
+const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total, categoryColor, isHome}) => {
     const buttonHandler = () => {
         handler(name, 'setCategory')
     }
     return (
         <TouchableOpacity style={styles.main} onPress={buttonHandler}>
-            <View style={styles.category}>
-                {name && <Text style={styles.category_text}>{name}</Text>}
-                <View style={{}}>
-                <IconComponent width={40} height={40} />
+            {isHome && name && <Text style={styles.category_text}>{name}</Text>}
+            <View style={styles.budgetContainer}>
+                {isHome && <BudgetIcon width={15} height={15} fill={categoryColor}/>}
+                {isHome && <Text style={[styles.startBudget_text, {color: categoryColor}]}>100 €</Text>}
+            </View>
+            <View style={[styles.category, {backgroundColor: categoryColor, marginBottom: isHome ? 5 : 0}]}>
+                <View>
+                    <IconComponent width={isHome ? 30 : 17} height={isHome ? 30 : 17}/>
                 </View>
             </View>
-            <View>
-                <Text>{total.length !== 0 ? total : '0'} €</Text>
-            </View>
+            {isHome && <View>
+                <Text style={[styles.total_text, {color: categoryColor}]}>{total.length !== 0 ? total : '0'} €</Text>
+            </View>}
         </TouchableOpacity>
     )
 }
@@ -41,27 +47,35 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#3498db',
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: 'black',
-        width: '80px',
-        height: '60px',
-        borderRadius: 30,
-    },
-    icon: {
-        width: '30px',
-        height: '30px'
+        padding: 15,
+        marginBottom: 5,
+        borderRadius: 50,
     },
     category_text: {
-        color: 'white'
+        color: 'black',
+        fontWeight: 'bold',
+        marginBottom: 2,
+        fontSize: 15
+    },
+    total_text: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 17
+    },
+    startBudget_text: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 13
     },
     main: {
+        width: "30%",
         display: "flex",
         alignItems: 'center',
-
+        margin: 5
+    },
+    budgetContainer: {
+        display: "flex",
+        flexDirection: "row"
     },
 
 

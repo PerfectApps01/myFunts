@@ -2,51 +2,75 @@
   "categories": [
     {
       "id": "restaurant",
-      "name": "restaurant"
+      "name": "restaurant",
+      "bgIconColor": "#3955b4",
+      "bgColor": "#d7ddf0",
     },
     {
       "id": "leisure",
-      "name": "leisure"
+      "name": "leisure",
+      "bgIconColor": "#ff4283",
+      "bgColor": "#ffd9e6",
     },
     {
       "id": "transport",
-      "name": "transport"
+      "name": "transport",
+      "bgIconColor": "#feaa38",
+      "bgColor": "#feeed7",
     },
     {
       "id": "products",
-      "name": "products"
+      "name": "products",
+      "bgIconColor": "#00a6eb",
+      "bgColor": "#ccedfb",
     },
     {
       "id": "pets",
-      "name": "pets"
+      "name": "pets",
+      "bgIconColor": "#875b4e",
+      "bgColor": "#e7dedb",
     },
     {
       "id": "health",
-      "name": "health"
+      "name": "health",
+      "bgIconColor": "#01ae4a",
+      "bgColor": "#cceeda",
     },
     {
       "id": "shopping",
-      "name": "shopping"
+      "name": "shopping",
+      "bgIconColor": "#01bbd0",
+      "bgColor": "#ccf1f5",
     },
     {
       "id": "family",
-      "name": "family"
+      "name": "family",
+      "bgIconColor": "#c5aafe",
+      "bgColor": "#f3eefe",
     },
     {
       "id": "bank",
-      "name": "bank"
+      "name": "bank",
+      "bgIconColor": "#adc0c9",
+      "bgColor": "#eef2f4",
     },
     {
       "id": "presents",
-      "name": "presents"
+      "name": "presents",
+      "bgIconColor": "#ff5554",
+      "bgColor": "#ffdddc",
     },
     {
       "id": "car",
-      "name": "car"
+      "name": "car",
+      "bgIconColor": "#6666FF",
+      "bgColor": "#e0e0ff",
     },
     {
       "id": "others",
-      "name": "others"
+      "name": "others",
+      "bgIconColor": "#9b9b9b",
+      "bgColor": "#ebebeb",
     }
   ]
 }

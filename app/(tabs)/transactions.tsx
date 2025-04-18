@@ -1,9 +1,9 @@
-import {StyleSheet, Image, Platform, View, Text, Button} from 'react-native';
+import {StyleSheet, Image, Platform, View, Text, Button, SafeAreaView} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../hooks/redux'
 import {useEffect} from "react";
 import {deleteTransaction, fetchBalance} from "@/store/reducers/ActionCreators";
 
-export default function TabTwoScreen() {
+export default function Transactions() {
     const dispatch = useAppDispatch();
     const {isLoading, balanceData} = useAppSelector(state => state.balanceReducer)
     const {transactions} = balanceData
@@ -18,7 +18,7 @@ export default function TabTwoScreen() {
     };
 
     return (
-        <View>
+        <SafeAreaView>
             {isLoading || !transactions ? (
                 <Text>Загрузка...</Text>
             ) : (transactions.map((transaction, index) => (
@@ -36,7 +36,7 @@ export default function TabTwoScreen() {
                     </View>
                 </View>
             )))}
-        </View>
+        </SafeAreaView>
     );
 }
 
