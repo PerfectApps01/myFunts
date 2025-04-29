@@ -1,49 +1,71 @@
-import {StyleSheet, Image, Platform, View, Text, Button, SafeAreaView} from 'react-native';
-import React, {useCallback, useEffect, useState} from "react";
+import {StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from "react";
 import CategoryPrompt from "@/components/modal/modal";
 import CategoryItem from "@/components/categoryItem/CategoryItem";
 import {icons} from "@/constants/CategoryIcons";
 import categories from "@/constants/CategoriesData.json";
-import {useAppSelector} from "@/hooks/redux";
+import {useAppDispatch, useAppSelector} from "@/hooks/redux";
+import {fetchBalance, updateBudget} from "@/store/reducers/ActionCreators";
 
 export default function Budget() {
+    const dispatch = useAppDispatch();
     const {balanceData, isLoading} = useAppSelector(state => state.balanceReducer);
     const {balance, totals} = balanceData
 
+    useEffect(() => {
+        dispatch(fetchBalance());
+    }, [dispatch]);
+
     const [visible, setVisible] = useState(false);
+    const [currentCategory, setCurrentCategory] = useState({name: '', budget: ''});
+
     const handleCategory = async (input: number) => {
+        dispatch(updateBudget({category: currentCategory.name, amount: input, budget: currentCategory.budget}));
     };
 
-    const categoryHandler = useCallback((name: string) => {
+    const buttonHandler = (name: string, budget: string) => {
         setVisible(true);
-    }, []);
+        setCurrentCategory({name: name, budget: budget});
+    }
 
 
     return (
         <SafeAreaView style={styles.home}>
             <View style={styles.header}>
+                {isLoading ? (
+                    <Text>Загрузка...</Text>
+                ) : (
+                    <>
+                        <Text style={styles.startBalance}>
+                            {balance.startBalance} €
+                        </Text>
+                        <Text style={styles.startBalance}>
+                            {balance.currentBudget} €
+                        </Text>
+                    </>
+                )}
+
             </View>
-            <View style={styles.main}>
+            <ScrollView style={styles.main}>
                 {categories.categories.map((category, index) => (
-                    <View style={[styles.budgetItem, {backgroundColor: category.bgColor}]} key={index}>
+                    <TouchableOpacity onPress={() => {
+                        buttonHandler(category.name, totals[index].budget);
+                    }} style={[styles.budgetItem, {backgroundColor: category.bgColor}]} key={category.id}>
                         <View style={styles.iconContainer}>
                             <CategoryItem
                                 key={category.id}
-                                name={category.name}
                                 icon={icons[category.name]}
                                 categoryColor={category.bgIconColor}
-                                handler={categoryHandler}
-                                total={totals[index] ? totals[index].total : '0'}
                                 isHome={false}
                             />
-                            <Text style={styles.categoryName}>{category.name}</Text>
+                            <Text style={[styles.categoryName, {color: category.bgIconColor}]}>{category.name}</Text>
                         </View>
                         <View style={styles.amount}>
-                            <Text style={styles.amountText}>100$</Text>
+                            <Text style={styles.amountText}>{totals[index] ? totals[index].budget : '0'} €</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 ))}
-            </View>
+            </ScrollView>
             <CategoryPrompt
                 visible={visible}
                 onSubmit={handleCategory}
@@ -63,9 +85,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        borderColor: 'black',
-        borderStyle: 'solid',
-        borderWidth: 1,
     },
     main: {
         height: '85%',
@@ -116,6 +135,11 @@ const styles = StyleSheet.create({
     },
     amountText: {
         fontSize: 18,
+        fontWeight: 'bold',
+        color: '#509b4f'
+    },
+    startBalance: {
+        fontSize: 27,
         fontWeight: 'bold',
     },
 });

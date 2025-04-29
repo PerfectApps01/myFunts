@@ -8,25 +8,30 @@ import React, {FC} from "react";
 import BudgetIcon from "@/components/Common/BudgetIcon";
 
 interface CategoryItemProps {
-    name: string;
+    name?: string;
     id: string;
     icon: React.FC<{ width?: number; height?: number }>;
-    handler: (name: string, modalType: string) => void;
-    total: string,
+    handler?: (name: string, modalType: string) => void;
+    total?: string,
+    budget?: string,
     categoryColor: string,
     isHome: boolean,
 }
 
-const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total, categoryColor, isHome}) => {
+const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total, categoryColor, isHome, budget}) => {
+
     const buttonHandler = () => {
-        handler(name, 'setCategory')
+        if (handler) {
+            handler(name, 'setCategory')
+        }
     }
+
     return (
         <TouchableOpacity style={styles.main} onPress={buttonHandler}>
             {isHome && name && <Text style={styles.category_text}>{name}</Text>}
             <View style={styles.budgetContainer}>
-                {isHome && <BudgetIcon width={15} height={15} fill={categoryColor}/>}
-                {isHome && <Text style={[styles.startBudget_text, {color: categoryColor}]}>100 €</Text>}
+                {isHome && <BudgetIcon width={17} height={18} fill={categoryColor}/>}
+                {isHome && <Text style={[styles.startBudget_text, {color: categoryColor}]}>{budget && budget.length !== 0 ? budget : '0'} €</Text>}
             </View>
             <View style={[styles.category, {backgroundColor: categoryColor, marginBottom: isHome ? 5 : 0}]}>
                 <View>
@@ -34,7 +39,7 @@ const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler
                 </View>
             </View>
             {isHome && <View>
-                <Text style={[styles.total_text, {color: categoryColor}]}>{total.length !== 0 ? total : '0'} €</Text>
+                <Text style={[styles.total_text, {color: categoryColor}]}>{total && total.length !== 0 ? total : '0'} €</Text>
             </View>}
         </TouchableOpacity>
     )
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     startBudget_text: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 13
+        fontSize: 18
     },
     main: {
         width: "30%",

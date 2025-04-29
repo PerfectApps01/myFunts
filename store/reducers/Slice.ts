@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchBalance, updateBalance, updateStartBalance} from "../../store/reducers/ActionCreators";
+import {fetchBalance, updateBalance, updateBudget, updateStartBalance} from "../../store/reducers/ActionCreators";
 
 interface Transaction {
     date: string;
@@ -11,6 +11,7 @@ interface Transaction {
 interface totals {
     category: string;
     total: string;
+    budget: string;
 }
 
 interface BalanceData {
@@ -18,6 +19,7 @@ interface BalanceData {
     balance: {
         startBalance: number;
         currentBalance: number;
+        currentBudget: number;
         lastUpdate: string;
     };
     transactions: Transaction[];
@@ -36,6 +38,7 @@ const initialState: BalanceState = {
         balance: {
             startBalance: 0,
             currentBalance: 0,
+            currentBudget: 0,
             lastUpdate: "",
         },
         transactions: [],
@@ -79,12 +82,25 @@ const balanceSlice = createSlice({
             })
             .addCase(updateStartBalance.fulfilled, (state, action) => {
                 if (action.payload) {
+                    state.isLoading = false;
                     state.balanceData.balance.startBalance = action.payload;
                 }
             })
             .addCase(updateStartBalance.rejected, (state, action) => {
                 state.error = action.payload as string;
-            });
+            })
+            .addCase(updateBudget.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateBudget.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.isLoading = false;
+                    state.balanceData = action.payload;
+                }
+            })
+            .addCase(updateBudget.rejected, (state, action) => {
+                state.error = action.payload as string;
+            })
     },
 });
 

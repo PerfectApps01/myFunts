@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, SafeAreaView, Button} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, Button, Pressable} from 'react-native';
 import {useCallback, useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {fetchBalance, updateBalance, updateStartBalance} from "../../store/reducers/ActionCreators";
@@ -7,11 +7,16 @@ import CategoryItem from "../../components/categoryItem/CategoryItem";
 import {icons} from '../../constants/CategoryIcons';
 import CategoryPrompt from "../../components/modal/modal";
 import UpdateBalanceModal from "@/components/modal/UpdateBalanceModal";
+import DonutChart from "@/components/chart/chart";
+import {addCategoryColor} from "@/utils/addCategoryColor";
+import {CategoryColors} from "@/constants/CategoryColors";
 
 export default function HomeScreen() {
     const dispatch = useAppDispatch();
     const {balanceData, isLoading} = useAppSelector(state => state.balanceReducer);
     const {balance, totals} = balanceData
+
+    const totalsWithColors = addCategoryColor(totals, CategoryColors).filter(item => item.total > 0)
 
     const [visible, setVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -41,21 +46,31 @@ export default function HomeScreen() {
             </View>
             <View style={styles.main}>
                 <View style={styles.balance}>
-                    <View style={styles.chart}>
-                        {isLoading ? (
-                            <Text>Загрузка...</Text>
-                        ) : (
-                            <>
-                                <Text>{`Было: ${balance.startBalance}`} €</Text>
-                                <Text>{`Осталось: ${balance.currentBalance}`} €</Text>
-                            </>
-                        )}
-                    </View>
-                    <View style={styles.button_block}>
-                        <Button title={'Update initial capital'} onPress={() => {
-                            setModalVisible(true)
-                        }}/>
-                    </View>
+                    <Pressable onPress={() => {
+                        setModalVisible(true)
+                    }}>
+                        <DonutChart
+                            isLoading={isLoading}
+                            spent={balance.startBalance}
+                            budget={balance.currentBalance}
+                            data={totalsWithColors}
+                        />
+                    </Pressable>
+                    {/*<View style={styles.chart}>*/}
+                    {/*    {isLoading ? (*/}
+                    {/*        <Text>Загрузка...</Text>*/}
+                    {/*    ) : (*/}
+                    {/*        <>*/}
+                    {/*            <Text>{`Было: ${balance.startBalance}`} €</Text>*/}
+                    {/*            <Text>{`Осталось: ${balance.currentBalance}`} €</Text>*/}
+                    {/*        </>*/}
+                    {/*    )}*/}
+                    {/*</View>*/}
+                    {/*<View style={styles.button_block}>*/}
+                    {/*    <Button title={'Update initial capital'} onPress={() => {*/}
+                    {/*        setModalVisible(true)*/}
+                    {/*    }}/>*/}
+                    {/*</View>*/}
                 </View>
                 <View style={styles.categories}>
                     {categories.categories.map((category, index) => (
@@ -66,6 +81,7 @@ export default function HomeScreen() {
                             categoryColor={category.bgIconColor}
                             handler={categoryHandler}
                             total={totals[index] ? totals[index].total : '0'}
+                            budget={totals[index] ? totals[index].budget : '0'}
                             isHome={true}
                         />
                     ))}

@@ -1,3 +1,5 @@
+import {CategoryColors} from "@/constants/CategoryColors";
+
 export interface IBalance {
     success: boolean;
     balance: balanceType;
@@ -8,6 +10,12 @@ export interface balanceType {
     currentBalance: number;
     lastUpdate: string;
     startBalance: number
+}
+
+export interface totalsType {
+category: string;
+    total: string;
+    budget: string;
 }
 
 export interface transactionType {
@@ -32,3 +40,5 @@ export interface categoryType {
         | 'presents'
         | 'others'
 }
+
+export type CategoryColorKeys = keyof typeof CategoryColors;

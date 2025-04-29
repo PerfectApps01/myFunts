@@ -26,7 +26,7 @@ export const fetchBalance = createAsyncThunk(
 
 export const updateBalance = createAsyncThunk(
     "balance/updateBalance",
-    async ({category, amount}: { category: string; amount: number }, {rejectWithValue, dispatch}) => {
+    async ({category, amount}: { category: string; amount: number }, {rejectWithValue}) => {
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
@@ -44,7 +44,6 @@ export const updateBalance = createAsyncThunk(
             if (!data.success) {
                 throw new Error("Ошибка при обновлении данных");
             }
-            // dispatch(fetchBalance());
             return data;
         } catch (error) {
             return rejectWithValue(error.message);
@@ -103,6 +102,34 @@ export const deleteTransaction = createAsyncThunk(
             }
 
             dispatch(fetchBalance()); // Обновим данные
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateBudget = createAsyncThunk(
+    "balance/updateBudget",
+    async ({category, amount, budget}: { category: string; amount: number, budget: string }, {rejectWithValue}) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain",
+                },
+                body: JSON.stringify({
+                    actionType: 'updateBudget',
+                    category,
+                    amount,
+                    budget,
+                    date: new Date(),
+                }),
+            });
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error("Ошибка при обновлении данных");
+            }
             return data;
         } catch (error) {
             return rejectWithValue(error.message);
