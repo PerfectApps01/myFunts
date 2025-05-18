@@ -9,20 +9,20 @@ import BudgetIcon from "@/components/Common/BudgetIcon";
 
 interface CategoryItemProps {
     name?: string;
-    id: string;
+    id?: string;
     icon: React.FC<{ width?: number; height?: number }>;
-    handler?: (name: string, modalType: string) => void;
+    handler?: (id: string, modalType: string) => void;
     total?: string,
     budget?: string,
     categoryColor: string,
     isHome: boolean,
 }
 
-const CategoryItem: FC<CategoryItemProps> = ({name, icon: IconComponent, handler, total, categoryColor, isHome, budget}) => {
+const CategoryItem: FC<CategoryItemProps> = ({name, id, icon: IconComponent, handler, total, categoryColor, isHome, budget}) => {
 
     const buttonHandler = () => {
         if (handler) {
-            handler(name, 'setCategory')
+            handler(id, 'setCategory')
         }
     }
 

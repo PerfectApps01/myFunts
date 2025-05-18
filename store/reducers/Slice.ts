@@ -60,7 +60,15 @@ const balanceSlice = createSlice({
             })
             .addCase(fetchBalance.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.balanceData = action.payload;
+                state.balanceData = {
+                    ...state.balanceData,
+                    ...action.payload,
+                    transactions: [...action.payload.transactions], // создаём новый массив
+                    totals: [...action.payload.totals],
+                    balance: {
+                        ...action.payload.balance
+                    }
+                };
             })
             .addCase(fetchBalance.rejected, (state, action) => {
                 state.isLoading = false;
@@ -83,7 +91,7 @@ const balanceSlice = createSlice({
             .addCase(updateStartBalance.fulfilled, (state, action) => {
                 if (action.payload) {
                     state.isLoading = false;
-                    state.balanceData.balance.startBalance = action.payload;
+                    state.balanceData.balance = action.payload.balance;
                 }
             })
             .addCase(updateStartBalance.rejected, (state, action) => {
@@ -95,7 +103,8 @@ const balanceSlice = createSlice({
             .addCase(updateBudget.fulfilled, (state, action) => {
                 if (action.payload) {
                     state.isLoading = false;
-                    state.balanceData = action.payload;
+                    state.balanceData.balance = action.payload.balance;
+                    state.balanceData.totals = action.payload.totals;
                 }
             })
             .addCase(updateBudget.rejected, (state, action) => {

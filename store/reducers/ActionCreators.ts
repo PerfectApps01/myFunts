@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const fetchBalance = createAsyncThunk(
     "balance/fetchBalance",
-    async (_, { rejectWithValue }) => {
+    async (_, {rejectWithValue}) => {
         try {
             const response = await axios.get(API_URL, {
                 headers: {
@@ -81,7 +81,10 @@ export const updateStartBalance = createAsyncThunk(
 
 export const deleteTransaction = createAsyncThunk(
     "balance/deleteTransaction",
-    async ({ date, category, amount }: { date: string, category: string, amount: string }, { rejectWithValue, dispatch }) => {
+    async ({date, category, amount}: { date: string, category: string, amount: string }, {
+        rejectWithValue,
+        dispatch
+    }) => {
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
@@ -111,7 +114,7 @@ export const deleteTransaction = createAsyncThunk(
 
 export const updateBudget = createAsyncThunk(
     "balance/updateBudget",
-    async ({category, amount, budget}: { category: string; amount: number, budget: string }, {rejectWithValue}) => {
+    async ({category, amount, budget}: { category: string; amount: string, budget: string }, {rejectWithValue}) => {
         try {
             const response = await fetch(API_URL, {
                 method: "POST",

@@ -19,13 +19,13 @@ export default function Budget() {
     const [visible, setVisible] = useState(false);
     const [currentCategory, setCurrentCategory] = useState({name: '', budget: ''});
 
-    const handleCategory = async (input: number) => {
+    const handleCategory = async (input: string) => {
         dispatch(updateBudget({category: currentCategory.name, amount: input, budget: currentCategory.budget}));
     };
 
-    const buttonHandler = (name: string, budget: string) => {
+    const buttonHandler = (id: string, budget: string) => {
         setVisible(true);
-        setCurrentCategory({name: name, budget: budget});
+        setCurrentCategory({name: id, budget: budget});
     }
 
 
@@ -46,15 +46,15 @@ export default function Budget() {
                 )}
 
             </View>
-            <ScrollView style={styles.main}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 51 }} style={styles.main}>
                 {categories.categories.map((category, index) => (
                     <TouchableOpacity onPress={() => {
-                        buttonHandler(category.name, totals[index].budget);
+                        buttonHandler(category.id, totals[index].budget);
                     }} style={[styles.budgetItem, {backgroundColor: category.bgColor}]} key={category.id}>
                         <View style={styles.iconContainer}>
                             <CategoryItem
                                 key={category.id}
-                                icon={icons[category.name]}
+                                icon={icons[category.id]}
                                 categoryColor={category.bgIconColor}
                                 isHome={false}
                             />
@@ -70,6 +70,7 @@ export default function Budget() {
                 visible={visible}
                 onSubmit={handleCategory}
                 onClose={() => setVisible(false)}
+                isBudget={true}
             />
         </SafeAreaView>
     );
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
-        width: '30%',
+        width: '40%',
         paddingLeft: 15,
     },
     amount: {

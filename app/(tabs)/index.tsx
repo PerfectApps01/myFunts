@@ -50,34 +50,20 @@ export default function HomeScreen() {
                         setModalVisible(true)
                     }}>
                         <DonutChart
-                            isLoading={isLoading}
+                            data={totalsWithColors}
                             spent={balance.startBalance}
                             budget={balance.currentBalance}
-                            data={totalsWithColors}
+                            isLoading={isLoading}
                         />
                     </Pressable>
-                    {/*<View style={styles.chart}>*/}
-                    {/*    {isLoading ? (*/}
-                    {/*        <Text>Загрузка...</Text>*/}
-                    {/*    ) : (*/}
-                    {/*        <>*/}
-                    {/*            <Text>{`Было: ${balance.startBalance}`} €</Text>*/}
-                    {/*            <Text>{`Осталось: ${balance.currentBalance}`} €</Text>*/}
-                    {/*        </>*/}
-                    {/*    )}*/}
-                    {/*</View>*/}
-                    {/*<View style={styles.button_block}>*/}
-                    {/*    <Button title={'Update initial capital'} onPress={() => {*/}
-                    {/*        setModalVisible(true)*/}
-                    {/*    }}/>*/}
-                    {/*</View>*/}
                 </View>
                 <View style={styles.categories}>
                     {categories.categories.map((category, index) => (
                         <CategoryItem
                             key={category.id}
+                            id={category.id}
                             name={category.name}
-                            icon={icons[category.name]}
+                            icon={icons[category.id]}
                             categoryColor={category.bgIconColor}
                             handler={categoryHandler}
                             total={totals[index] ? totals[index].total : '0'}
@@ -91,6 +77,7 @@ export default function HomeScreen() {
                 visible={visible}
                 onSubmit={handleCategory}
                 onClose={() => setVisible(false)}
+                isBudget={false}
             />
 
             <UpdateBalanceModal
