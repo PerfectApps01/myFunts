@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     budget: {
         fontSize: 18,
         color: '#50C7C7',
+        fontWeight: 'bold',
     },
 });
 

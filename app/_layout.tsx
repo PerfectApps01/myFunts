@@ -1,15 +1,14 @@
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
-import {useFonts} from 'expo-font';
-import {Stack} from 'expo-router';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import * as SplashScreen from 'expo-splash-screen';
 import {StatusBar} from 'expo-status-bar';
-import {useEffect} from 'react';
-import 'react-native-reanimated';
-
-import {useColorScheme} from '@/hooks/useColorScheme';
-import {Provider} from "react-redux";
-import {store} from "expo-router/build/global-state/router-store";
 import {setupStore} from "@/store/store";
+import {Provider} from "react-redux";
+import {useFonts} from 'expo-font';
+import {Stack} from 'expo-router';
+import 'react-native-reanimated';
+import {useEffect} from 'react';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

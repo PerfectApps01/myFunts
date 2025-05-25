@@ -1,11 +1,11 @@
 import {StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from "react";
-import CategoryPrompt from "@/components/modal/modal";
-import CategoryItem from "@/components/categoryItem/CategoryItem";
-import {icons} from "@/constants/CategoryIcons";
-import categories from "@/constants/CategoriesData.json";
-import {useAppDispatch, useAppSelector} from "@/hooks/redux";
 import {fetchBalance, updateBudget} from "@/store/reducers/ActionCreators";
+import CategoryItem from "@/components/categoryItem/CategoryItem";
+import {useAppDispatch, useAppSelector} from "@/hooks/redux";
+import categories from "@/constants/CategoriesData.json";
+import CategoryPrompt from "@/components/modal/modal";
+import React, {useEffect, useState} from "react";
+import {icons} from "@/constants/CategoryIcons";
 
 export default function Budget() {
     const dispatch = useAppDispatch();

@@ -26,7 +26,7 @@ export const fetchBalance = createAsyncThunk(
 
 export const updateBalance = createAsyncThunk(
     "balance/updateBalance",
-    async ({category, amount}: { category: string; amount: number }, {rejectWithValue}) => {
+    async ({category, amount}: { category: string; amount: string }, {rejectWithValue}) => {
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
@@ -81,7 +81,7 @@ export const updateStartBalance = createAsyncThunk(
 
 export const deleteTransaction = createAsyncThunk(
     "balance/deleteTransaction",
-    async ({date, category, amount}: { date: string, category: string, amount: string }, {
+    async ({date, category, amount}: { date: string, category: string, amount: number }, {
         rejectWithValue,
         dispatch
     }) => {

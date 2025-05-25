@@ -1,17 +1,17 @@
-import {StyleSheet, Text, View, SafeAreaView, Button, Pressable} from 'react-native';
-import {useCallback, useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {fetchBalance, updateBalance, updateStartBalance} from "../../store/reducers/ActionCreators";
-import categories from '../../constants/CategoriesData.json';
-import CategoryItem from "../../components/categoryItem/CategoryItem";
-import {icons} from '../../constants/CategoryIcons';
-import CategoryPrompt from "../../components/modal/modal";
+import {fetchBalance, updateBalance, updateStartBalance} from "@/store/reducers/ActionCreators";
+import {StyleSheet, Text, View, SafeAreaView, Pressable} from 'react-native';
 import UpdateBalanceModal from "@/components/modal/UpdateBalanceModal";
-import DonutChart from "@/components/chart/chart";
+import CategoryItem from "../../components/categoryItem/CategoryItem";
+import {useAppDispatch, useAppSelector} from "@/hooks/redux";
+import categories from '../../constants/CategoriesData.json';
+import CategoryPrompt from "../../components/modal/modal";
 import {addCategoryColor} from "@/utils/addCategoryColor";
 import {CategoryColors} from "@/constants/CategoryColors";
+import {useCallback, useEffect, useState} from 'react';
+import DonutChart from "@/components/chart/chart";
+import {icons} from '@/constants/CategoryIcons';
 
-export default function HomeScreen() {
+export default function Home() {
     const dispatch = useAppDispatch();
     const {balanceData, isLoading} = useAppSelector(state => state.balanceReducer);
     const {balance, totals} = balanceData
@@ -26,7 +26,7 @@ export default function HomeScreen() {
         dispatch(fetchBalance());
     }, [dispatch]);
 
-    const handleCategory = async (input: number) => {
+    const handleCategory = async (input: string) => {
         dispatch(updateBalance({category: currentCategory, amount: input}));
     };
 
@@ -78,6 +78,7 @@ export default function HomeScreen() {
                 onSubmit={handleCategory}
                 onClose={() => setVisible(false)}
                 isBudget={false}
+                currentCategory={currentCategory}
             />
 
             <UpdateBalanceModal

@@ -7,10 +7,11 @@ interface CategoryPromptProps {
     onSubmit: (input: string) => void;
     onClose: () => void;
     isBudget: boolean;
+    currentCategory: string;
 }
 
-const CategoryPrompt = ({isBudget, visible, onClose, onSubmit}: CategoryPromptProps) => {
-    const [input, setInput] = useState("");
+const CategoryPrompt = ({isBudget, visible, currentCategory, onClose, onSubmit}: CategoryPromptProps) => {
+    const [input, setInput] = useState('');
 
     const handleSubmit = () => {
         const isValidInput = input.length !== 0 && (!isBudget ? input !== '0' : true);
@@ -34,6 +35,7 @@ const CategoryPrompt = ({isBudget, visible, onClose, onSubmit}: CategoryPromptPr
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.main}>
                     <View style={styles.content}>
+                        <Text style={styles.categoryText}>{currentCategory}</Text>
                         {!isBudget ? input === '0'
                             ? <Text style={styles.labelText}>Недостаточная сумма!</Text>
                             : <Text style={styles.labelText}>Добавление расхода</Text>
@@ -128,5 +130,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         fontSize: 19,
+    },
+    categoryText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 5,
+        fontSize: 22,
     },
 });

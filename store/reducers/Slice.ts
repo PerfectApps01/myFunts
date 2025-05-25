@@ -1,5 +1,5 @@
+import {fetchBalance, updateBalance, updateBudget, updateStartBalance} from "@/store/reducers/ActionCreators";
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchBalance, updateBalance, updateBudget, updateStartBalance} from "../../store/reducers/ActionCreators";
 
 interface Transaction {
     date: string;

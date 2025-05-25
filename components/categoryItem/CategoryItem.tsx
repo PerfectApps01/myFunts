@@ -10,7 +10,7 @@ import BudgetIcon from "@/components/Common/BudgetIcon";
 interface CategoryItemProps {
     name?: string;
     id?: string;
-    icon: React.FC<{ width?: number; height?: number }>;
+    icon?: React.FC<{ width?: number; height?: number }>;
     handler?: (id: string, modalType: string) => void;
     total?: string,
     budget?: string,

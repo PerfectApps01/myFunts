@@ -1,17 +1,25 @@
+import {deleteTransaction, fetchBalance} from '@/store/reducers/ActionCreators';
+import {groupTransactionsByDate} from "@/utils/groupTransactionsByDate";
+import {useAppDispatch, useAppSelector} from '@/hooks/redux';
+import DeleteIcon from '@/components/Common/DeleteIcon';
+import React, {useEffect} from 'react';
+import {ru} from 'date-fns/locale';
+import {format} from 'date-fns';
 import {
+    SafeAreaView,
     StyleSheet,
+    ScrollView,
+    Pressable,
     View,
     Text,
-    SafeAreaView,
-    Pressable,
-    ScrollView
 } from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../hooks/redux';
-import React, {useEffect} from 'react';
-import {deleteTransaction, fetchBalance} from '@/store/reducers/ActionCreators';
-import DeleteIcon from '@/components/Common/DeleteIcon';
-import {format} from 'date-fns';
-import {ru} from 'date-fns/locale';
+
+interface TransactionsType {
+    amount: number;
+    category: string;
+    date: string;
+    newBalance: number;
+}
 
 export default function Transactions() {
     const dispatch = useAppDispatch();
@@ -25,24 +33,13 @@ export default function Transactions() {
     const handleDelete = (
         transactionDate: string,
         transactionCategory: string,
-        transactionAmount: string
+        transactionAmount: number
     ) => {
         dispatch(deleteTransaction({date: transactionDate, category: transactionCategory, amount: transactionAmount}));
         dispatch(fetchBalance());
     };
 
-    const groupByDate = (data) => {
-        return data.reduce((acc, transaction) => {
-            const dateKey = format(new Date(transaction.date), 'yyyy-MM-dd');
-            if (!acc[dateKey]) {
-                acc[dateKey] = [];
-            }
-            acc[dateKey].push(transaction);
-            return acc;
-        }, {});
-    };
-
-    const grouped = groupByDate(transactions);
+    const grouped = groupTransactionsByDate(transactions);
     const groupedArray = Object.entries(grouped).sort(([a], [b]) => (a < b ? 1 : -1)); // новые даты выше
 
     return (
@@ -50,7 +47,7 @@ export default function Transactions() {
             <View style={styles.title}>
                 <Text style={styles.textBold}>Список расходов</Text>
             </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: 74 }}>
+            <ScrollView contentContainerStyle={{paddingBottom: 74}}>
                 <View style={styles.items}>
                     {isLoading || !transactions ? (
                         <Text>Загрузка...</Text>
@@ -60,7 +57,7 @@ export default function Transactions() {
                                 <Text style={styles.dateLabel}>
                                     {format(new Date(date), 'd MMMM yyyy', {locale: ru})}
                                 </Text>
-                                {items.map((transaction, index) => (
+                                {items.map((transaction: TransactionsType, index: number) => (
                                     <View
                                         style={[styles.item, index % 2 === 0 ? styles.even : styles.odd]}
                                         key={`${transaction.date}-${transaction.category}-${index}`}
