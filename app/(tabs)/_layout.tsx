@@ -1,4 +1,3 @@
-import {useColorScheme} from '@/hooks/useColorScheme';
 import {IconSymbol} from "@/components/IconSymbol";
 import {Entypo} from "@expo/vector-icons";
 import {Platform} from 'react-native';
@@ -7,7 +6,6 @@ import React from 'react';
 
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
 
     return (
         <Tabs
